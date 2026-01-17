@@ -39,5 +39,6 @@ def ask():
 if __name__ == '__main__':
     # host='0.0.0.0' تسمح بالوصول للتطبيق من خارج جهازك
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+   app.run(host='0.0.0.0', port=8000)
+
     
