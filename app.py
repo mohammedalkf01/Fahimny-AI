@@ -36,9 +36,8 @@ def ask():
         return jsonify({'response': "عذراً، حدث خطأ في معالجة طلبك. تأكد من إعداد المفتاح بشكل صحيح."})
 
 # إعدادات التشغيل لتناسب السيرفرات العالمية (مثل Render)
-if __name__ == '__main__':
-    # host='0.0.0.0' تسمح بالوصول للتطبيق من خارج جهازك
-    port = int(os.environ.get("PORT", 5000))
-   app.run(host='0.0.0.0', port=8000)
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=8000)
 
     
+
