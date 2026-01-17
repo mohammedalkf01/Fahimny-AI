@@ -24,7 +24,8 @@ def ask():
 
         # استخدام موديل Gemini 3 Flash الجديد
         response = client.models.generate_content(
-            model="gemini-3-flash-preview",
+           # تأكد من استخدام هذا الاسم تحديداً للموديل
+model = genai.GenerativeModel('gemini-3-flash')
             contents=user_input
         )
         
@@ -36,8 +37,10 @@ def ask():
         return jsonify({'response': "عذراً، حدث خطأ في معالجة طلبك. تأكد من إعداد المفتاح بشكل صحيح."})
 
 # إعدادات التشغيل لتناسب السيرفرات العالمية (مثل Render)
+if __name__ == '__main__':
+    # host='0.0.0.0' تسمح بالوصول للتطبيق من خارج جهازك
+    port = int(os.environ.get("PORT", 5000))
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8000)
-
-    
-
+    if __name__ == "__main__":
+    # هذا السطر يخبر التطبيق أن يعمل على البورت 8000 الذي يطلبه Koyeb
+    app.run(host='0.0.0.0', port=8000)    
