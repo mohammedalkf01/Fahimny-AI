@@ -1,46 +1,45 @@
-from flask import Flask, render_template, request, jsonify
-from google import genai
 import os
+from flask import Flask, render_template, request, jsonify
+import google.generativeai as genai
 
 app = Flask(__name__)
 
-# جلب المفتاح من نظام التشغيل (لحماية مفتاحك من السرقة عند رفع الكود)
-API_KEY = os.getenv("GEMINI_API_KEY")
+# 1. إعداد مفتاح الـ API من إعدادات السيرفر
+# تأكد أنك سميت المتغير في Koyeb باسم GEMINI_API_KEY
+api_key = os.getenv("GEMINI_API_KEY")
+genai.configure(api_key=api_key)
 
-# إعداد العميل (Client)
-# إذا كنت تجرب الكود محلياً قبل ضبط "Environment Variable"، 
-# يمكنك وضع المفتاح مؤقتاً هنا بدلاً من os.getenv، لكن احذفه قبل الرفع!
-client = genai.Client(api_key=API_KEY)
+# 2. استخدام موديل 1.5 flash لضمان السرعة والاستقرار
+model = genai.GenerativeModel('gemini-1.5-flash')
 
 @app.route('/')
-def home():
+def index():
     return render_template('index.html')
 
 @app.route('/ask', methods=['POST'])
 def ask():
     try:
-        data = request.json
-        user_input = data.get('message')
+        data = request.get_json()
+        user_message = data.get('message')
 
-        # استخدام موديل Gemini 3 Flash الجديد
-        response = client.models.generate_content(
-           # تأكد من استخدام هذا الاسم تحديداً للموديل
-model = genai.GenerativeModel('gemini-3-flash')
-            contents=user_input
-        )
+        if not user_message:
+            return jsonify({'reply': 'الرجاء كتابة سؤال..'})
+
+        # 3. إرسال السؤال للذكاء الاصطناعي
+        response = model.generate_content(user_message)
         
-        return jsonify({'response': response.text})
-    
-    except Exception as e:
-        # طباعة الخطأ في التيرمينال للمساعدة في التشخيص
-        print(f"Error details: {e}")
-        return jsonify({'response': "عذراً، حدث خطأ في معالجة طلبك. تأكد من إعداد المفتاح بشكل صحيح."})
+        # التأكد من استلام نص
+        if response.text:
+            return jsonify({'reply': response.text})
+        else:
+            return jsonify({'reply': 'لم أستطع تكوين رد، حاول مرة أخرى.'})
 
-# إعدادات التشغيل لتناسب السيرفرات العالمية (مثل Render)
-if __name__ == '__main__':
-    # host='0.0.0.0' تسمح بالوصول للتطبيق من خارج جهازك
-    port = int(os.environ.get("PORT", 5000))
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return jsonify({'reply': f'حدث خطأ في الخادم: {str(e)}'})
+
 if __name__ == "__main__":
-    if __name__ == "__main__":
-    # هذا السطر يخبر التطبيق أن يعمل على البورت 8000 الذي يطلبه Koyeb
+    # تشغيل التطبيق على البورت 8000 كما يطلب Koyeb
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host='0.0.0.0', port=port)
     app.run(host='0.0.0.0', port=8000)    
