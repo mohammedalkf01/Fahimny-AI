@@ -9,8 +9,8 @@ app = Flask(__name__)
 api_key = os.getenv("GEMINI_API_KEY")
 genai.configure(api_key=api_key)
 
-# 2. استخدام موديل 1.5 flash لضمان السرعة والاستقرار
-model = genai.GenerativeModel('gemini-1.5-flash')
+# 2. استخدام موديل 3 flash لضمان السرعة والاستقرار
+model = genai.GenerativeModel('gemini-3-flash')
 
 @app.route('/')
 def index():
@@ -43,3 +43,4 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     app.run(host='0.0.0.0', port=port)
     app.run(host='0.0.0.0', port=8000)    
+
