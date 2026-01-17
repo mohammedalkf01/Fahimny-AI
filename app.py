@@ -42,5 +42,6 @@ if __name__ == "__main__":
     # هذا السطر يخبر السيرفر باستخدام البورت الذي يحدده Railway
     port = int(os.environ.get("PORT", 8000))
     app.run(host='0.0.0.0', port=port)
+test railway
 
 
